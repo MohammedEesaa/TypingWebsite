@@ -14,6 +14,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 app.use(express.json());
+// Explicit route to serve the main game page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'typing-game.html'));
+});
 app.use(express.static(path.join(__dirname)));
 
 const createTable = `CREATE TABLE IF NOT EXISTS leaderboard (
