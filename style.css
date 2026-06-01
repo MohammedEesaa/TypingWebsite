@@ -1,0 +1,662 @@
+/* =============================================
+   CSS VARIABLES — central theme configuration
+   Change these to restyle the whole game
+============================================= */
+:root {
+  --bg:        #0a0a0f;        /* Deep near-black background */
+  --surface:   #12121a;        /* Slightly lighter card/panel colour */
+  --border:    #1e1e2e;        /* Subtle border colour */
+  --accent:    #00ffe7;        /* Neon cyan — primary highlight */
+  --accent2:   #ff2d78;        /* Hot pink — error/danger highlight */
+  --accent3:   #ffe600;        /* Yellow — warning / WPM display */
+  --text:      #c8d0e0;        /* Soft off-white body text */
+  --dim:       #4a4a6a;        /* Muted colour for inactive elements */
+  --correct:   #2efc7d;        /* Colour for correctly typed characters */
+  --wrong:     #ff2d78;        /* Colour for incorrectly typed characters */
+  --cursor:    #ffe600;        /* Blinking cursor colour */
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-head: 'Orbitron', sans-serif;
+  --accent-rgb: 0,255,231;     /* Accent color as RGB for patterns (dark mode) */
+}
+
+/* =============================================
+   LIGHT MODE OVERRIDES (when .light-theme is applied)
+============================================= */
+.light-theme {
+  --bg:        #e6eef6;        /* Slightly muted light background */
+  --surface:   #f6f8fb;        /* Gentle card surface */
+  --border:    #d2d8e0;        /* Light subtle border */
+  --accent:    #0057b8;        /* Blue accent */
+  --accent-rgb: 0,87,184;      /* Accent color as RGB for light-mode patterns */
+  /* Dark checkerboard pattern (accent color) + subtle scanline overlay */
+  background-image:
+    conic-gradient(from 45deg, rgba(var(--accent-rgb),0.06) 0 25%, var(--bg) 0 50%, rgba(var(--accent-rgb),0.06) 0 75%, var(--bg) 0 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(var(--accent-rgb),0.01) 2px,
+      rgba(var(--accent-rgb),0.01) 4px
+    );
+  background-size: 200px 200px, auto;
+}
+
+/* Subtle water-ripple texture using low-opacity concentric rings
+   positioned across the canvas. Uses --accent-rgb for color. */
+body.light-theme {
+  background: var(--bg);
+  /* True checkerboard using conic-gradient; repeats per tile via background-size */
+  background-image: conic-gradient(from 45deg, rgba(var(--accent-rgb),0.12) 0 25%, rgba(255,255,255,0.98) 0 50%, rgba(var(--accent-rgb),0.12) 0 75%, rgba(255,255,255,0.98) 0 100%);
+  background-size: 200px 200px;
+  background-position: 0 0;
+  background-attachment: fixed;
+}
+
+/* Light-mode overlay tweak: make the click-to-start overlay a soft light-gray */
+body.light-theme #start-overlay {
+  background: rgba(180, 178, 178, 0.87);
+  color: var(--text);
+  border: 1px solid rgba(44,62,80,0.06);
+  box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+}
+/* =============================================
+   GLOBAL RESET & BASE STYLES
+============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 0.8rem;
+  /* Dark checkerboard (accent + bg) + subtle scanline overlay */
+  background-image:
+    conic-gradient(from 45deg, rgba(var(--accent-rgb),0.06) 0 25%, var(--bg) 0 50%, rgba(var(--accent-rgb),0.06) 0 75%, var(--bg) 0 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.02) 2px,
+      rgba(255,255,255,0.02) 4px
+    );
+  background-size: 200px 200px, auto;
+}
+
+/* =============================================
+   HEADER / TITLE
+============================================= */
+header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 740px;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) 1fr;
+  gap: 1.5rem;
+  width: min(100%, 1120px);
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem 1.5rem;
+  align-items: start;
+}
+
+.game-card {
+  justify-self: center;
+}
+
+.leaderboard-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.4rem;
+  box-shadow: 0 0 30px rgba(0,0,0,0.06);
+  min-height: 460px;
+}
+
+.panel-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.panel-head .label {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.panel-head .meta {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+
+.leaderboard-username {
+  margin-bottom: 1rem;
+}
+
+.leaderboard-username input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+}
+
+.leaderboard-username input::placeholder {
+  color: var(--dim);
+}
+
+.leaderboard-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.leaderboard-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.8rem;
+  align-items: center;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.8rem 0.95rem;
+}
+
+.leaderboard-item .rank {
+  font-family: var(--font-head);
+  color: var(--accent);
+  min-width: 2rem;
+  text-align: center;
+}
+
+.leaderboard-item .player {
+  color: var(--text);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  text-transform: capitalize;
+}
+
+.leaderboard-item .score {
+  font-family: var(--font-head);
+  color: var(--accent3);
+  font-size: 1rem;
+}
+
+.empty-state {
+  padding: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  color: var(--dim);
+  background: rgba(255,255,255,0.03);
+  font-size: 0.95rem;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  color: var(--dim);
+  padding: 0.45rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  z-index: 20;
+}
+
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+@media (max-width: 780px) {
+  .theme-toggle {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    top: auto;
+    right: auto;
+    transform: translateX(-50%);
+    z-index: 20;
+  }
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 46px;
+  height: 24px;
+}
+
+.theme-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.theme-switch .slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.14);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.theme-switch .slider::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.theme-switch input:checked + .slider {
+  background: rgba(0,255,231,0.16);
+  border-color: rgba(0,255,231,0.28);
+}
+
+.theme-switch input:checked + .slider::before {
+  transform: translateX(22px);
+  background: #ffffff;
+}
+
+.theme-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+header h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.8rem, 5vw, 3rem); /* Responsive font size */
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  /* Single-color blue text style */
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+  background: none;
+  background-clip: unset;
+  -webkit-background-clip: unset;
+  filter: none;
+}
+
+header p {
+  margin-top: 0.5rem;
+  color: var(--dim);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* =============================================
+   MAIN GAME CARD
+============================================= */
+.game-card {
+  width: min(100%, 740px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.6rem;
+  margin: 0;
+  /* Soft glow around card */
+  box-shadow: 0 0 40px rgba(0,255,231,0.05), 0 0 80px rgba(0,0,0,0.6);
+  position: relative;
+}
+
+
+/* =============================================
+   STATS BAR (WPM / Accuracy / Timer)
+============================================= */
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  flex: 1;
+  min-width: 90px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.8rem 1rem;
+  text-align: center;
+}
+
+/* Small label above the number */
+.stat-box .label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+
+/* The big number */
+.stat-box .value {
+  font-family: var(--font-head);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent3);
+  line-height: 1;
+}
+
+/* Timer turns red when time is running low */
+.stat-box.timer-box .value { color: var(--accent); }
+.stat-box.timer-box .value.low { color: var(--accent2); }
+
+/* =============================================
+   WORD DISPLAY AREA
+   Shows the text the player must type
+============================================= */
+#word-display {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  line-height: 2;
+  letter-spacing: 0.04em;
+  color: var(--dim);            /* Default: all text is dim/grey */
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.4rem;
+  min-height: 120px;
+  word-break: break-word;
+  position: relative;
+  user-select: none;            /* Prevent copy-pasting to cheat! */
+}
+
+/* Each individual character is wrapped in a <span> for individual colouring */
+#word-display span { position: relative; }
+
+/* Green = correct character typed */
+#word-display span.correct { color: var(--correct); }
+
+/* Red = wrong character typed */
+#word-display span.wrong   { color: var(--wrong); }
+
+/* Yellow blinking cursor shown on the current character */
+#word-display span.cursor::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 2px;
+  background: var(--cursor);
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* =============================================
+   HIDDEN INPUT FIELD
+   The actual <input> that captures keystrokes.
+   It's invisible — the display above shows the styled text.
+============================================= */
+#typing-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none; /* Can't click it directly */
+  width: 1px;
+  height: 1px;
+}
+
+/* =============================================
+   CLICK-TO-START OVERLAY
+   Shown before the game starts / after it ends
+============================================= */
+#start-overlay {
+  position: absolute;
+  inset: 0; /* shorthand for top/right/bottom/left: 0 */
+  background: rgba(10,10,15,0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.2s ease, transform 0.2s ease, opacity 0.3s;
+}
+
+#start-overlay:hover {
+  background: rgba(10,10,15,0.96);
+  transform: translateY(-2px);
+}
+
+#start-overlay.hidden { display: none; }
+
+#start-overlay .big-text {
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+#start-overlay .sub-text {
+  font-size: 0.75rem;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+}
+
+/* =============================================
+   CONTROLS (time selector + restart button)
+============================================= */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+/* Time mode buttons: 15s / 30s / 60s */
+.time-modes {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.time-btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 0.9rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Active / hovered time button */
+.time-btn:hover,
+.time-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 10px rgba(0,255,231,0.15);
+}
+
+/* Restart button */
+#restart-btn {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  padding: 0.5rem 1.4rem;
+  background: transparent;
+  border: 1px solid var(--accent2);
+  color: var(--accent2);
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+#restart-btn:hover {
+  background: var(--accent2);
+  color: var(--bg);
+  box-shadow: 0 0 18px rgba(255,45,120,0.35);
+}
+
+/* =============================================
+   WORD CATEGORY SELECTOR
+============================================= */
+.category-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+}
+
+.cat-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.cat-btn:hover,
+.cat-btn.active {
+  border-color: var(--accent3);
+  color: var(--accent3);
+  box-shadow: 0 0 10px rgba(255,230,0,0.1);
+}
+
+/* =============================================
+   RESULTS SCREEN
+   Shown after a round ends
+============================================= */
+#results-screen {
+  display: none; /* Hidden by default, shown via JS */
+  text-align: center;
+  padding: 1rem 0;
+}
+
+#results-screen h2 {
+  font-family: var(--font-head);
+  font-size: 1.2rem;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.results-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.result-item .r-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+
+.result-item .r-value {
+  font-family: var(--font-head);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--accent3);
+  line-height: 1;
+}
+
+/* Rank label (S / A / B etc.) */
+.rank-badge {
+  font-family: var(--font-head);
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin: 0.5rem 0 1.2rem;
+  display: block;
+}
+
+/* =============================================
+   FOOTER
+============================================= */
+footer {
+  margin-top: 2rem;
+  font-size: 0.7rem;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+@media (max-width: 780px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+    width: min(100%, 760px);
+    margin: 0 auto 1.5rem;
+    padding: 0 1rem 1.5rem;
+  }
+
+  .app-grid > .leaderboard-panel {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .app-grid > .game-card {
+    order: 1;
+    justify-self: center;
+    width: min(100%, 740px);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .stats,
+  .category-row,
+  .controls {
+    justify-content: center;
+  }
+
+  .time-modes {
+    justify-content: center;
+  }
+
+  footer {
+    margin-bottom: 5rem;
+  }
+}

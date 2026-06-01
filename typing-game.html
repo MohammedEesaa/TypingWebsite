@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TYPE//FAST — Speed Typing Game</title>
+
+  <!-- Google Fonts: Share Tech Mono for that terminal/hacker feel, Orbitron for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ PAGE HEADER ============ -->
+  <header>
+    <h1>Exo's Speed Typer</h1>
+    <p>Follow me @Exosmik on Twitter :)</p>
+    <div class="theme-toggle">
+      <span class="theme-icon">☀️</span>
+      <label class="theme-switch">
+        <input type="checkbox" id="theme-checkbox" />
+        <span class="slider"></span>
+      </label>
+      <span class="theme-icon">🌙</span>
+    </div>
+  </header>
+
+  <div class="app-grid">
+    <aside class="leaderboard-panel">
+      <div class="panel-head">
+        <div class="label">Leaderboard</div>
+        <div class="meta" id="leaderboard-meta">Gaming · 30s</div>
+      </div>
+      <div class="leaderboard-username">
+        <input id="username-input" type="text" placeholder="Enter username" maxlength="16" />
+      </div>
+      <div class="leaderboard-list" id="leaderboard-list">
+        <div class="empty-state">Complete a round to see scores for this theme and time.</div>
+      </div>
+    </aside>
+
+    <div class="game-card">
+
+    <!-- STATS BAR -->
+    <div class="stats">
+      <div class="stat-box">
+        <div class="label">WPM</div>
+        <div class="value" id="wpm-display">0</div>
+      </div>
+      <div class="stat-box timer-box">
+        <div class="label">Time</div>
+        <div class="value" id="timer-display">30</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Accuracy</div>
+        <div class="value" id="acc-display">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Chars</div>
+        <div class="value" id="chars-display">0</div>
+      </div>
+    </div>
+
+    <!-- WORD CATEGORY SELECTOR -->
+    <div class="category-row" id="category-row">
+      <button class="cat-btn active" data-cat="gaming">Games</button>
+      <button class="cat-btn" data-cat="cs">Coding</button>
+      <button class="cat-btn" data-cat="leagueoflegends">LoL</button>
+      <button class="cat-btn" data-cat="mixed">Mixed</button>
+    </div>
+
+    <!-- WORD DISPLAY + HIDDEN INPUT -->
+    <div style="position:relative;">
+      <div id="word-display" tabindex="0">
+        <!-- Character spans are injected here by JS -->
+      </div>
+
+      <!-- The overlay shown before / between rounds -->
+      <div id="start-overlay">
+        <div class="big-text">Click to Start</div>
+      </div>
+    </div>
+
+    <!-- The real input element (invisible, focused when typing) -->
+    <input id="typing-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+
+    <!-- RESULTS SCREEN (hidden until round ends) -->
+    <div id="results-screen">
+      <h2>// Round Complete</h2>
+      <span class="rank-badge" id="rank-badge">—</span>
+      <div class="results-grid">
+        <div class="result-item">
+          <div class="r-label">WPM</div>
+          <div class="r-value" id="result-wpm">0</div>
+        </div>
+        <div class="result-item">
+          <div class="r-label">Accuracy</div>
+          <div class="r-value" id="result-acc">0%</div>
+        </div>
+        <div class="result-item">
+          <div class="r-label">Correct</div>
+          <div class="r-value" id="result-correct">0</div>
+        </div>
+        <div class="result-item">
+          <div class="r-label">Errors</div>
+          <div class="r-value" id="result-errors">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <!-- Time selector buttons -->
+      <div class="time-modes">
+        <button class="time-btn" data-time="15">15s</button>
+        <button class="time-btn active" data-time="30">30s</button>
+        <button class="time-btn" data-time="60">60s</button>
+      </div>
+      <button id="restart-btn">↺ Restart</button>
+    </div>
+
+      </div><!-- end .game-card -->
+  </div><!-- end .app-grid -->
+
+  <footer>ICL alot of this was vibecoded, pls dm me if you find any bugs </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT — ALL GAME LOGIC
+  ============================================================= -->
+  <script src="script.js"></script>
+</body>
+</html>
